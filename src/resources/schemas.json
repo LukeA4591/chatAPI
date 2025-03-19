@@ -1,0 +1,16 @@
+{
+  "user_register": {
+    "type": "object",
+    "properties": {
+      "username": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64
+      }
+    },
+    "required": [
+      "username"
+    ],
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,383 @@
+openapi: 3.0.0
+info:
+  description: "This is a simple example API spec for SENG365 Lab 2. This is included to give an example API spec before the first assignment where it is much more verbose"
+  version: 1.0.0
+  title: "SENG365 Lab 2"
+  contact:
+    email: "morgan.english@canterbury.ac.nz"
+tags:
+  - name: "users"
+    description: "Access to users and their usernames"
+  - name: "conversations"
+    description: "Access to conversations"
+  - name: "messages"
+    description: "Access to messages within specific conversations"
+paths:
+  /users:
+    get:
+      tags:
+        - "users"
+      summary: "Get all users"
+      description: "Retrieve all users"
+      operationId: "getUsers"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/userWithId"
+        "500":
+          description: "Internal Server Error"
+    post:
+      tags:
+        - "users"
+      summary: "Add a new user"
+      description: "Create a new user with a username"
+      operationId: "addUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userId"
+        "400":
+          description: "Invalid input"
+        "500":
+          description: "Internal Server Error"
+  /users/{id}:
+    parameters:
+      - name: id
+        description: "ID of the user."
+        in: path
+        required: true
+        schema:
+          title: id
+          type: integer
+    get:
+      tags:
+        - "users"
+      summary: "Find user by ID"
+      description: "Returns a single user"
+      operationId: "getUserById"
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userWithId"
+        "404":
+          description: "User not found"
+        "500":
+          description: "Internal Server Error"
+    put:
+      tags:
+        - "users"
+      summary: "Update an existing user"
+      description: "Update User"
+      operationId: "updateUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Invalid input"
+        "404":
+          description: "User not found"
+        "500":
+          description: "Internal Server Error"
+    delete:
+      tags:
+        - "users"
+      summary: "Deletes a user"
+      description: ""
+      operationId: "deleteUser"
+      responses:
+        "200":
+          description: "User deleted"
+        "404":
+          description: "User not found"
+        "500":
+          description: "Internal Server Error"
+  /conversations:
+    get:
+      tags:
+        - "conversations"
+      summary: "Get all conversations"
+      description: "Get all conversations"
+      operationId: "getConversations"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/conversationFull"
+        "500":
+          description: "Internal Server Error"
+    post:
+      tags:
+        - "conversations"
+      summary: "Add a new conversation"
+      description: "Create a new conversation with a name"
+      operationId: "addConversation"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/conversation'
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/conversationId"
+        "400":
+          description: "Invalid input"
+        "500":
+          description: "Internal Server Error"
+  /converastions/{id}:
+    parameters:
+      - name: id
+        description: "ID of the conversation."
+        in: path
+        required: true
+        schema:
+          title: id
+          type: integer
+    get:
+      tags:
+        - "conversations"
+      summary: "Find conversation by ID"
+      description: "Returns a single conversation"
+      operationId: "getConversationById"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/conversationFull"
+        "404":
+          description: "Conversation not found"
+        "500":
+          description: "Internal Server Error"
+    put:
+      tags:
+        - "conversations"
+      summary: "Update an existing conversation"
+      description: "Update conversation"
+      operationId: "updateConversation"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/conversation'
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Invalid input"
+        "404":
+          description: "Conversation not found"
+        "500":
+          description: "Internal Server Error"
+    delete:
+      tags:
+        - "conversations"
+      summary: "Deletes a conversation"
+      description: "Deletes a conversation"
+      operationId: "deleteConversation"
+      responses:
+        "200":
+          description: "Conversation deleted"
+        "404":
+          description: "Conversation not found"
+        "500":
+          description: "Internal Server Error"
+  /conversations/{id}/messages:
+    parameters:
+      - name: id
+        description: "ID of the conversation."
+        in: path
+        required: true
+        schema:
+          title: id
+          type: integer
+    get:
+      tags:
+        - "messages"
+      summary: "Get all messages from conversation by ID"
+      description: "Returns all messages from a single conversation"
+      operationId: "getMessagesFromConversationById"
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/messageFull"
+        "404":
+          description: "Conversation not found"
+        "500":
+          description: "Internal Server Error"
+    post:
+      tags:
+        - "messages"
+      summary: "Add a new message to a conversation"
+      description: "Create a new message in a conversation"
+      operationId: "addMessageToConversation"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/message'
+      responses:
+        "201":
+          description: "Message created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/messageId"
+        "400":
+          description: "Invalid input"
+        "500":
+          description: "Internal Server Error"
+  /conversations/{id}/messages/{mid}:
+    parameters:
+      - name: id
+        description: "ID of the conversation."
+        in: path
+        required: true
+        schema:
+          title: id
+          type: integer
+      - name: mid
+        description: "ID of the message."
+        in: path
+        required: true
+        schema:
+          title: id
+          type: integer
+    get:
+      tags:
+        - "messages"
+      summary: "Get messages by id from conversation by id"
+      description: "Returns single message from a single conversation"
+      operationId: "getMessageFromConversationById"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/messageFull"
+        "404":
+          description: "Conversation not found"
+        "500":
+          description: "Internal Server Error"
+
+components:
+  schemas:
+    user:
+      title: user
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          example: "Adam"
+    userId:
+      title: userId
+      type: object
+      properties:
+        user_id:
+          type: integer
+          minimum: 0
+          example: 1001
+    userWithId:
+      title: userWithId
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/user'
+        - $ref: '#/components/schemas/userId'
+    conversationId:
+      title: conversationId
+      type: object
+      properties:
+        convo_id:
+          type: integer
+          minimum: 0
+          example: 1001
+    conversation:
+      title: converation
+      type: object
+      properties:
+        convo_name:
+          type: string
+          minLength: 1
+          example: "My first conversation name"
+    conversationFull:
+      title: conversationWithId
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/conversation'
+      properties:
+        convo_id:
+          type: integer
+          minimum: 0
+          example: 1001
+        created_on:
+          description: "Date time UTC string for conversation creation date"
+          type: string
+          example: '2012-04-23T18:25:43.511Z'
+    messageId:
+      title: messageId
+      type: object
+      properties:
+        message_id:
+          type: integer
+          minimum: 0
+          example: 1001
+    message:
+      title: message
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/userId'
+      properties:
+        message:
+          type: string
+          minLength: 1
+          example: "My first message"
+    messageFull:
+      title: messageFull
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/message'
+        - $ref: '#/components/schemas/messageId'
+        - $ref: '#/components/schemas/conversationId'
+        - $ref: '#/components/schemas/userId'
+      properties:
+
+        sent_time:
+          description: "Date time UTC string for conversation creation date"
+          type: string
+          example: '2012-04-23T18:25:43.511Z'
