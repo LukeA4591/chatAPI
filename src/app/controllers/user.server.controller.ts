@@ -26,7 +26,7 @@ const create = async (req: Request, res: Response) : Promise<void> => {
     const username = req.body.username;
     try {
         const result = await users.insert( username );
-        res.status( 201 ).send({"user_id": result.insertId} );
+        res.status( 201 ).send({"user_id": result.insertId});
     } catch( err ) {
         res.status( 500 ).send( `ERROR creating user ${username}: ${ err }`);
     }
@@ -38,7 +38,7 @@ const read = async (req: Request, res: Response): Promise<void> => {
     try {
         const result = await users.getOne(parseInt(id, 10));
         if (result.length === 0) {
-            res.status(404).send('User not found');
+            res.status(404).send({"User": "not found"});
         } else {
             res.status(200).send(result[0]);
         }
@@ -59,7 +59,7 @@ const update = async (req: Request, res: Response): Promise<void> => {
     const username = req.body.username;
     try {
         const result = await users.alter(parseInt(id, 10), username);
-        res.status(200).send(result);
+        res.status(200).send({"updated user_id": result.insertId});
     } catch ( err ) {
         res.status( 500 ).send(`ERROR updating user ${id}: ${ err }`);
     }
@@ -70,7 +70,7 @@ const remove = async (req: Request, res: Response): Promise<void> => {
     const id = parseInt(req.params.id, 10);
     try {
         const result = await users.remove(id);
-        res.status(200).send(result);
+        res.status(200).send({"deleted user_id": result.insertId});
     } catch ( err ) {
         res.status(404).send(`ERROR deleteing user ${id}: ${ err }`);
     }

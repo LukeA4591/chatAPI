@@ -34,7 +34,7 @@ const insert = async (username: string) : Promise<ResultSetHeader> => {
 const alter = async (id: number, username: string): Promise<any> => {
     Logger.info(`Altering user with Id: ${id} in the database`);
     const conn = await getPool().getConnection();
-    const query = 'update lab2_users set username = ? where id = ?';
+    const query = 'update lab2_users set username = ? where user_id = ?';
     const [ result ] = await conn.query(query, [ username, id]);
     await conn.release();
     return result;
@@ -43,7 +43,7 @@ const alter = async (id: number, username: string): Promise<any> => {
 const remove = async (id: number): Promise<any> => {
     Logger.info(`Removing user with Id: ${id}`);
     const conn = await getPool().getConnection();
-    const query = 'delete from lab2_users where id = ?';
+    const query = 'delete from lab2_users where user_id = ?';
     const [ result ] = await conn.query( query, [ id ] );
     await conn.release();
     return result;
