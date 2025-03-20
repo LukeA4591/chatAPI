@@ -40,8 +40,13 @@ const alter = async (id: number, username: string): Promise<any> => {
     return result;
 }
 
-const remove = async (): Promise<any> => {
-    return null;
-    }
+const remove = async (id: number): Promise<any> => {
+    Logger.info(`Removing user with Id: ${id}`);
+    const conn = await getPool().getConnection();
+    const query = 'delete from lab2_users where id = ?';
+    const [ result ] = await conn.query( query, [ id ] );
+    await conn.release();
+    return result;
+}
 
 export { getAll, getOne, insert, alter, remove }

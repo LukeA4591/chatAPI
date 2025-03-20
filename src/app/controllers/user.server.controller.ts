@@ -58,15 +58,22 @@ const update = async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
     const username = req.body.username;
     try {
-        const result = users.alter(parseInt(id, 10), username);
-
+        const result = await users.alter(parseInt(id, 10), username);
+        res.status(200).send(result);
     } catch ( err ) {
         res.status( 500 ).send(`ERROR updating user ${id}: ${ err }`);
     }
 };
 
 const remove = async (req: Request, res: Response): Promise<void> => {
-    return null;
+    Logger.http(`DELETE user with id ${req.params.id}`);
+    const id = parseInt(req.params.id, 10);
+    try {
+        const result = await users.remove(id);
+        res.status(200).send(result);
+    } catch ( err ) {
+        res.status(404).send(`ERROR deleteing user ${id}: ${ err }`);
     }
+};
 
 export { list, create, read, update, remove }
